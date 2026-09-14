@@ -224,7 +224,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "url-modifier@example.com",
+      "id": "{28349081-09fb-4525-9c42-83be2fc84522}",
       "strict_min_version": "113.0",
       "data_collection_permissions": {
         "required": [
