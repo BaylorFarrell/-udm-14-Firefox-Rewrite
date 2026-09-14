@@ -1,9 +1,9 @@
 {
   "name": "&udm=14",
   "description": "Modifies Google Search URLs to include '&udm=14' when enabled.",
-  "version": "2.0",
-  "manifest_version": 3,
-  "action": {
+  "version": "3.0",
+  "manifest_version": 2,
+  "browser_action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "images/icon-16.png",
@@ -19,7 +19,9 @@
     "128": "images/icon-128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "scripts": [
+      "background.js"
+    ]
   },
   "declarative_net_request": {
     "rule_resources": [
@@ -31,9 +33,7 @@
     ]
   },
   "permissions": [
-    "declarativeNetRequestWithHostAccess"
-  ],
-  "host_permissions": [
+    "declarativeNetRequestWithHostAccess",
     "https://www.google.com/*",
     "https://www.google.ad/*",
     "https://www.google.ae/*",
@@ -221,5 +221,19 @@
     "https://www.google.co.zm/*",
     "https://www.google.co.zw/*",
     "https://www.google.cat/*"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "url-modifier@example.com",
+      "strict_min_version": "113.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "120.0"
+    }
+  }
 }
