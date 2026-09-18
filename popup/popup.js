@@ -20,8 +20,11 @@ async function refreshTab(on) {
   if (!tab?.url) return;
   const url = new URL(tab.url);
   const p = url.searchParams;
-  if (url.pathname !== "/search" || !p.has("q")) return;
-  if (on && !p.has("udm") && !p.has("tbm")) p.set("udm", "14");
+  if (url.pathname !== "/search") return;
+  if (on && p.get("udm") === "26") p.set("udm", "48");
+  else if (!on && p.get("udm") === "48") p.set("udm", "26");
+  else if (!p.has("q")) return;
+  else if (on && !p.has("udm") && !p.has("tbm")) p.set("udm", "14");
   else if (!on && WEB.includes(p.get("udm"))) p.delete("udm");
   else return;
   browser.tabs.update(tab.id, { url: url.href });
