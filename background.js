@@ -8,3 +8,9 @@ browser.runtime.onStartup.addListener(async () => {
     });
   }
 });
+
+browser.runtime.onMessage.addListener(() =>
+  browser.declarativeNetRequest
+    .getEnabledRulesets()
+    .then((ids) => ids.includes("ruleset"))
+);
