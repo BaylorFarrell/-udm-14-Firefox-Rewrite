@@ -76,3 +76,61 @@ input:checked + .slider:before {
 .switch.no-transition .slider:before {
   transition: none;
 }
+
+.option {
+  max-width: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 17px;
+  font-family: "Google Sans", sans-serif;
+  font-weight: bold;
+  color: #3af8d3;
+}
+
+.option span {
+  cursor: help;
+}
+
+.check {
+  appearance: none;
+  font-size: inherit;
+  width: 1.8em;
+  height: 1.8em;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  border-radius: 0.5em;
+  background-color: #165c4f;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.check::before {
+  content: "";
+  width: 1.1em;
+  height: 1.1em;
+  background-image: linear-gradient(to right, #44ea7f, #3af8d3);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transition: .2s;
+}
+
+.check:checked {
+  background-color: var(--secondary-container, #1f806e);
+}
+
+.check:checked::before {
+  transform: scale(1);
+}
+
+.check:focus-visible {
+  outline: 2px solid #3af8d3;
+  outline-offset: 2px;
+}
+
+.check.no-transition,
+.check.no-transition::before {
+  transition: none;
+}

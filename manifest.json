@@ -1,7 +1,7 @@
 {
   "name": "&udm=14",
   "description": "Modifies Google Search URLs to include '&udm=14' when enabled.",
-  "version": "3.4",
+  "version": "3.5",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "popup/popup.html",
@@ -29,11 +29,18 @@
         "id": "ruleset",
         "enabled": true,
         "path": "rules.json"
+      },
+      {
+        "id": "minus-ai",
+        "enabled": false,
+        "path": "minus-ai.json"
       }
     ]
   },
   "permissions": [
     "declarativeNetRequestWithHostAccess",
+    "scripting",
+    "storage",
     "https://www.google.com/*",
     "https://www.google.ad/*",
     "https://www.google.ae/*",

@@ -1,43 +1,71 @@
 const toggler = document.getElementById("toggler");
+const minusAi = document.getElementById("minus-ai");
+const purgeAi = document.getElementById("purge-ai");
 const sw = toggler.closest(".switch");
 const RULESET = "ruleset";
+const MINUS_AI = "minus-ai";
 const WEB = ["14", "web"];
+const AI = / -ai$/i;
 
-const iconPaths = (on) =>
-  Object.fromEntries(
-    [16, 32, 48, 128].map((s) => [s, `/images/icon-${s}${on ? "" : "-off"}.png`])
-  );
+const save = (id, on) => browser.runtime.sendMessage({ id, on });
 
 async function init() {
   const enabled = await browser.declarativeNetRequest.getEnabledRulesets();
   toggler.checked = enabled.includes(RULESET);
+  minusAi.checked = enabled.includes(MINUS_AI);
+  purgeAi.checked = (await browser.scripting.getRegisteredContentScripts({ ids: ["purge"] })).length > 0;
   sw.offsetHeight;
-  sw.classList.remove("no-transition");
+  for (const el of document.querySelectorAll(".no-transition")) el.classList.remove("no-transition");
 }
 
-async function refreshTab(on) {
+async function activeTab() {
   const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
-  if (!tab?.url) return;
+  return tab?.url ? tab : null;
+}
+
+async function editTab(edit) {
+  const tab = await activeTab();
+  if (!tab) return;
   const url = new URL(tab.url);
-  const p = url.searchParams;
-  if (url.pathname !== "/search") return;
+  if (url.pathname === "/search" && edit(url.searchParams))
+    browser.tabs.update(tab.id, { url: url.href });
+}
+
+const web = (on) => (p) => {
   if (on && p.get("udm") === "26") p.set("udm", "48");
   else if (!on && p.get("udm") === "48") p.set("udm", "26");
-  else if (!p.has("q")) return;
+  else if (!p.has("q")) return false;
   else if (on && !p.has("udm") && !p.has("tbm")) p.set("udm", "14");
   else if (!on && WEB.includes(p.get("udm"))) p.delete("udm");
-  else return;
-  browser.tabs.update(tab.id, { url: url.href });
-}
+  else return false;
+  return true;
+};
+
+const ai = (on) => (p) => {
+  const q = p.get("q");
+  if (!q) return false;
+  if (on && !/-ai$/i.test(q)) p.set("q", `${q} -ai`);
+  else if (!on && AI.test(q)) p.set("q", q.replace(AI, ""));
+  else return false;
+  return true;
+};
 
 toggler.addEventListener("change", async () => {
   const on = toggler.checked;
-  const ids = [RULESET];
-  await browser.declarativeNetRequest.updateEnabledRulesets(
-    on ? { enableRulesetIds: ids } : { disableRulesetIds: ids }
-  );
-  browser.browserAction.setIcon({ path: iconPaths(on) });
-  refreshTab(on);
+  await save(RULESET, on);
+  editTab(web(on));
+});
+
+minusAi.addEventListener("change", async () => {
+  const on = minusAi.checked;
+  await save(MINUS_AI, on);
+  editTab(ai(on));
+});
+
+purgeAi.addEventListener("change", async () => {
+  await save("purge", purgeAi.checked);
+  const tab = await activeTab();
+  if (tab) browser.tabs.reload(tab.id);
 });
 
 init();

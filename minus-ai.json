@@ -1,0 +1,23 @@
+[
+  {
+    "id": 2,
+    "priority": 4,
+    "action": { "type": "allow" },
+    "condition": {
+      "regexFilter": "^https://www\\.google\\.(com?\\.)?[a-z]{2,3}/search\\?(.*&)?sa=",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 1,
+    "priority": 3,
+    "action": {
+      "type": "redirect",
+      "redirect": { "regexSubstitution": "\\1\\2+-ai\\3" }
+    },
+    "condition": {
+      "regexFilter": "^(https://www\\.google\\.(?:com?\\.)?[a-z]{2,3}/search\\?(?:.*&)?q=)([^&]{1,2}|[^&]*(?:[^&-][^&]{2}|[^&][^&a][^&]|[^&]{2}[^&i]))(&.*|)$",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+]

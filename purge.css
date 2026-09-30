@@ -1,0 +1,13 @@
+#Odp5De,
+[jscontroller="EYwa3d"],
+[jscontroller="jNZDL"],
+[data-tool],
+[role="menu"] > li:has([data-tool]),
+[role="menu"] > div:has(+ li [data-tool]),
+a[href*="//ai.google/"],
+[role="listitem"]:has(> a[href*="udm=50&"]),
+[role="listitem"]:has(> a[href$="udm=50"]),
+a[href*="udm=50&"],
+a[href$="udm=50"] {
+  display: none !important;
+}

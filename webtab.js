@@ -67,8 +67,17 @@ function addWebTab() {
   return true;
 }
 
-browser.runtime.sendMessage({ enabled: true }).then((on) => {
-  if (!on || addWebTab()) return;
+function hideMinusAi() {
+  for (const box of document.querySelectorAll('textarea[name="q"], input[name="q"]:not([type="hidden"])'))
+    box.value = box.value.replace(/ -ai$/i, "");
+}
+
+browser.runtime.sendMessage({ enabled: true }).then((ids) => {
+  if (ids.includes("minus-ai")) {
+    hideMinusAi();
+    addEventListener("pageshow", () => setTimeout(hideMinusAi));
+  }
+  if (!ids.includes("ruleset") || addWebTab()) return;
   const observer = new MutationObserver(() => addWebTab() && observer.disconnect());
   observer.observe(document.documentElement, { childList: true, subtree: true });
   setTimeout(() => observer.disconnect(), 5000);
