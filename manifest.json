@@ -1,6 +1,6 @@
 {
   "name": "&udm=14",
-  "description": "Modifies Google Search URLs to include '&udm=14' when enabled.",
+  "description": "Adds Web, -ai, and AI-purging controls to Google Search for a cleaner, web-first results experience.",
   "version": "3.5",
   "manifest_version": 2,
   "browser_action": {
