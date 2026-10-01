@@ -7,7 +7,17 @@
 a[href*="//ai.google/"],
 [role="listitem"]:has(> a[href*="udm=50&"]),
 [role="listitem"]:has(> a[href$="udm=50"]),
-a[href*="udm=50&"],
-a[href$="udm=50"] {
+a[href*="udm=50&"]:not([role="navigation"] a),
+a[href$="udm=50"]:not([role="navigation"] a) {
   display: none !important;
+}
+
+[role="navigation"] a[href*="udm=50&"],
+[role="navigation"] a[href$="udm=50"] {
+  visibility: hidden !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+  padding-inline: 0 !important;
+  overflow: hidden !important;
 }
