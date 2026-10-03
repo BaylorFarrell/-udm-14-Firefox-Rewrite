@@ -44,7 +44,7 @@ function addWebTab() {
   if (!here.length) return false;
 
   const model =
-    here.find((a) => {
+    [...document.querySelectorAll('[role="listitem"] > a')].find((a) => {
       const u = new URL(a.href, location.href);
       const q = u.searchParams;
       return u.pathname === "/search" && !q.get("udm") && !q.get("tbm");

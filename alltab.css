@@ -1,0 +1,5 @@
+[role="navigation"] [role="listitem"]:has(> a[href^="/search?"]:not([href*="udm="]):not([href*="tbm="])),
+[role="navigation"] [role="listitem"]:has(> a[href*="udm=26&"]),
+[role="navigation"] [role="listitem"]:has(> a[href$="udm=26"]) {
+  display: none !important;
+}

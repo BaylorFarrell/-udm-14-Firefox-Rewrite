@@ -1,9 +1,4 @@
-const PURGE = {
-  id: "purge",
-  css: ["purge.css"],
-  matches: browser.runtime.getManifest().permissions.filter((p) => p.includes("://")),
-  runAt: "document_start",
-};
+const CSS = { purge: "purge.css", "all-tab": "alltab.css" };
 
 const iconPaths = (on) =>
   Object.fromEntries(
@@ -11,9 +6,17 @@ const iconPaths = (on) =>
   );
 
 async function apply(id, on) {
-  if (id === PURGE.id) {
+  if (id in CSS) {
     const has = (await browser.scripting.getRegisteredContentScripts({ ids: [id] })).length > 0;
-    if (on && !has) await browser.scripting.registerContentScripts([PURGE]);
+    if (on && !has)
+      await browser.scripting.registerContentScripts([
+        {
+          id,
+          css: [CSS[id]],
+          matches: browser.runtime.getManifest().permissions.filter((p) => p.includes("://")),
+          runAt: "document_start",
+        },
+      ]);
     else if (!on && has) await browser.scripting.unregisterContentScripts({ ids: [id] });
     return;
   }

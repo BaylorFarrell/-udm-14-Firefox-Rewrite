@@ -1,7 +1,7 @@
 {
   "name": "&udm=14",
   "description": "Adds Web, -ai, and AI-purging controls to Google Search for a cleaner, web-first results experience.",
-  "version": "3.6",
+  "version": "3.7",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "popup/popup.html",
@@ -232,7 +232,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "url-modifier@example.com",
-      "strict_min_version": "113.0",
+      "strict_min_version": "121.0",
       "data_collection_permissions": {
         "required": [
           "none"
@@ -240,7 +240,7 @@
       }
     },
     "gecko_android": {
-      "strict_min_version": "120.0"
+      "strict_min_version": "121.0"
     }
   },
   "content_scripts": [
