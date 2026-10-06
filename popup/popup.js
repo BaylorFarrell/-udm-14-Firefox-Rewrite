@@ -41,8 +41,14 @@ async function editTab(edit) {
   const tab = await activeTab();
   if (!tab) return;
   const url = new URL(tab.url);
-  if (url.pathname === "/search" && edit(url.searchParams))
-    browser.tabs.update(tab.id, { url: url.href });
+  if (url.pathname !== "/search" || !edit(url.searchParams)) return false;
+  browser.tabs.update(tab.id, { url: url.href });
+  return true;
+}
+
+async function reload() {
+  const tab = await activeTab();
+  if (tab) browser.tabs.reload(tab.id);
 }
 
 const web = (on) => (p) => {
@@ -64,10 +70,17 @@ const ai = (on) => (p) => {
   return true;
 };
 
+// All tab needs the switch: ticking all tab turns the switch on, and turning the
+// switch off unticks all tab. Unticking all tab or turning the switch on changes nothing else.
 toggler.addEventListener("change", async () => {
   const on = toggler.checked;
   await save(RULESET, on);
-  editTab(web(on));
+  const css = !on && allTab.checked;
+  if (css) {
+    allTab.checked = false;
+    await save("all-tab", false);
+  }
+  if (!(await editTab(web(on))) && css) reload();
 });
 
 minusAi.addEventListener("change", async () => {
@@ -76,12 +89,20 @@ minusAi.addEventListener("change", async () => {
   editTab(ai(on));
 });
 
-for (const [box, id] of [[purgeAi, "purge"], [allTab, "all-tab"]])
-  box.addEventListener("change", async () => {
-    await save(id, box.checked);
-    const tab = await activeTab();
-    if (tab) browser.tabs.reload(tab.id);
-  });
+purgeAi.addEventListener("change", async () => {
+  await save("purge", purgeAi.checked);
+  reload();
+});
+
+allTab.addEventListener("change", async () => {
+  await save("all-tab", allTab.checked);
+  if (allTab.checked && !toggler.checked) {
+    toggler.checked = true;
+    await save(RULESET, true);
+    if (await editTab(web(true))) return;
+  }
+  reload();
+});
 
 settings.addEventListener("change", () => {
   localStorage.settings = +settings.checked;

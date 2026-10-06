@@ -5,6 +5,7 @@
 [role="menu"] > li:has([data-tool]),
 [role="menu"] > div:has(+ li [data-tool]),
 a[href*="//ai.google/"],
+div:has(> [jscontroller="aD8OEe"] a[href*="p=data_genai_search"]),
 [role="listitem"]:has(> a[href*="udm=50&"]),
 [role="listitem"]:has(> a[href$="udm=50"]),
 a[href*="udm=50&"]:not([role="navigation"] a),
