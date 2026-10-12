@@ -8,10 +8,22 @@ const store = (k, v) => {
   } catch (e) {}
 };
 
-const tabs = () =>
-  [...document.querySelectorAll('[role="listitem"] > a')].filter(
-    (a) => a.offsetParent && a.innerText.trim()
-  );
+const links = () => [...document.querySelectorAll('[role="listitem"] > a')];
+
+const tabs = () => links().filter((a) => a.offsetParent && a.innerText.trim());
+
+const allLink = () =>
+  links().find((a) => {
+    const u = new URL(a.href, location.href);
+    const q = u.searchParams;
+    return u.pathname === "/search" && !q.get("udm") && !q.get("tbm");
+  });
+
+// Web goes right after All (shown or hidden by alltab.css), not where Google puts it (after Shopping).
+function afterAll(item) {
+  const all = allLink();
+  if (all && all.parentElement !== item) all.parentElement.after(item);
+}
 
 function webLink() {
   for (const a of document.querySelectorAll('a[href*="udm=web"]')) {
@@ -34,7 +46,9 @@ function addWebTab() {
 
   if (WEB.includes(p.get("udm"))) {
     const cur = here.find((a) => a.closest("[aria-current]") || a.querySelector("[aria-current]"));
-    if (cur) store(LABEL, cur.innerText.trim());
+    if (!cur) return false;
+    store(LABEL, cur.innerText.trim());
+    afterAll(cur.parentElement);
     return true;
   }
 
@@ -43,12 +57,7 @@ function addWebTab() {
   if (web && web.offsetParent) return true;
   if (!here.length) return false;
 
-  const model =
-    [...document.querySelectorAll('[role="listitem"] > a')].find((a) => {
-      const u = new URL(a.href, location.href);
-      const q = u.searchParams;
-      return u.pathname === "/search" && !q.get("udm") && !q.get("tbm");
-    }) || here[0];
+  const model = allLink() || here[0];
 
   const url = new URL("/search", location.origin);
   url.searchParams.set("q", p.get("q"));
