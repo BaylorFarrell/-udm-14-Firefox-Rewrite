@@ -174,3 +174,34 @@ h1 + .option {
 .cog.no-transition::before {
   transition: none;
 }
+
+/* Forced colors (Firefox "Override colors", Windows contrast themes) drop gradients and force
+   backgrounds, which left only the labels visible. Redraw everything in system colors. */
+@media (forced-colors: active) {
+  h1, .slider, .slider:before, .check, .check::before, .cog::before {
+    forced-color-adjust: none;
+  }
+
+  h1 {
+    background: none;
+    color: CanvasText;
+  }
+
+  .slider, .check {
+    background: Canvas;
+    box-shadow: inset 0 0 0 2px ButtonText;
+  }
+
+  .slider:before, .check::before, .cog::before {
+    background: ButtonText;
+  }
+
+  input:checked + .slider, .check:checked {
+    background: Highlight;
+    box-shadow: none;
+  }
+
+  input:checked + .slider:before, .check:checked::before {
+    background: HighlightText;
+  }
+}
